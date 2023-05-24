@@ -35,3 +35,8 @@ li > button:hover {
 transform: scale(1.1);
 background-color: rgb(252 68 68 / 74%);
 }
+
+.contactsTitle {
+    text-align: center;
+    font-size: 30px;
+}

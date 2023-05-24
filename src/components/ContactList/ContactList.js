@@ -1,31 +1,43 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selectors';
-import { deleteContact } from 'redux/operations';
-import './ContactList.module.css';
+import { selectFilter } from 'redux/filter/selectors';
+import { selectContacts } from 'redux/contacts/selectors';
+import { deleteContact } from 'redux/contacts/contactsOperations';
+import css from './ContactList.module.css';
 
-const ContactList = () => {
+const ContactList = ({ children }) => {
   const { items, isLoading } = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
+  const [deletingContact, setDeletingContact] = useState(null);
 
   const dispatch = useDispatch();
   const filteredContacts = items.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const handleDeleteContact = async id => {
+    setDeletingContact(id);
+    await dispatch(deleteContact(id));
+    setDeletingContact(null);
+  };
+
   return (
     <>
-      <ul>
+      <h2 className={css.contactsTitle}>Contacts</h2>
+      {children}
+      <ul className={css.list}>
         {filteredContacts.map(({ id, name, number }) => (
-          <li key={id}>
-            <p >
+          <li className={css.item} key={id}>
+            <p className={css.text}>
               {name}: {number}
             </p>
             <button
-              onClick={() => dispatch(deleteContact(id))}
+              className={css.button}
+              onClick={() => handleDeleteContact(id)}
               type="button"
-              disabled={isLoading}
-                          >
-              Delete
+              disabled={isLoading || deletingContact === id}
+            >
+              {deletingContact === id ? 'Deleting...' : 'Delete'}
             </button>
           </li>
         ))}

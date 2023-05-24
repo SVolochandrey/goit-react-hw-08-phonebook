@@ -1,0 +1,22 @@
+.authContainer {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .linkAuth {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 250ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+  
+  .active {
+    color: #cc9cff;
+    font-size: 20px;
+  }
+  
+  .linkAuth:hover,
+  .linkAuth:focus {
+    color: #cc9cff;
+  }
+  

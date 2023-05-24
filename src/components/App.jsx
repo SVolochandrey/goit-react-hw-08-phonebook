@@ -1,41 +1,76 @@
-import { useEffect } from 'react';
-import { fetchContacts } from 'redux/operations';
+import { lazy, useEffect } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
-import ContactForm from './ContactForm';
-import Filter from './Filter';
-import ContactList from './ContactList';
-import Message from './Message';
-import './App.module.css';
+import { selectAuth } from 'redux/auth/selectors';
+import { refreshUser } from 'redux/auth/authOperations';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import AppBar from './AppBar';
+import PrivateRoute from './Routes/PrivateRout';
+import PublicRoute from './Routes/PublicRoute';
+
+const HomePage = lazy(() => import('pages/HomePage'));
+const ContactsPage = lazy(() => import('pages/ContactsPage'));
+const SignUpPage = lazy(() => import('pages/SignUpPage'));
+const LogInPage = lazy(() => import('pages/LogInPage'));
 
 const App = () => {
+  const { isRefreshing } = useSelector(selectAuth);
   const dispatch = useDispatch();
-  const { items, isLoading, error } = useSelector(selectContacts);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUser());
   }, [dispatch]);
 
   return (
-    <section>
-      <h1>Phonebook</h1>
-      <ContactForm />
-      
-      <h2 >Contacts</h2>
-      <Filter />
+    !isRefreshing && (
+      <>
+        <Routes>
+          <Route path="/" element={<AppBar />}>
+            <Route index element={<HomePage />} />
+            <Route
+              path="/contacts"
+              element={
+                <PrivateRoute>
+                  <ContactsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <SignUpPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LogInPage />
+                </PublicRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Route>
+        </Routes>
 
-      {items.length === 0 && !isLoading && !error ? (
-        <Message text="You do not have any contacts in the phone book yet." />
-      ) : (
-        <ContactList />
-      )}
-
-      {error && <Message text="Oops! An error has occurred!" />}
-
-      {isLoading && !error && items.length === 0 && (
-        <Message text="Loading..." />
-      )}
-    </section>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+      </>
+    )
   );
 };
 
