@@ -12,7 +12,7 @@ const UserMenu = () => {
     <>
       <NavLink
         className={({ isActive }) => {
-          return isActive ? css.activeContacts : css.conactsLink;
+          return isActive ? css.activeContactsLink : css.contactsLink;
         }}
         to="/contacts"
       >
@@ -20,7 +20,6 @@ const UserMenu = () => {
       </NavLink>
 
       <div className={css.userMenu}>
-        <p className={css.user}> Hello {name}</p>
         <button
           className={css.button}
           type="button"

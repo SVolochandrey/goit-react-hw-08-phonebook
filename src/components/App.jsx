@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from 'redux/auth/selectors';
 import { refreshUser } from 'redux/auth/authOperations';
 import { ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
+import './App.module.css';
 
 import AppBar from './AppBar';
 import PrivateRoute from './Routes/PrivateRout';

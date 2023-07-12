@@ -16,7 +16,7 @@ const AppBar = () => {
         <nav className={css.headerNav}>
           <NavLink
             className={({ isActive }) => {
-              return isActive ? css.active : css.link;
+              return isActive ? css.activeLink : css.link;
             }}
             to="/"
           >
